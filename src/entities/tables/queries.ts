@@ -51,10 +51,26 @@ export const useAddTableCellMutation = () => {
         .post(`/api/cells`, { tableId, col, row, value: "" })
         .then((res) => res.data),
     async onSettled() {
+      await queryClient.invalidateQueries({ queryKey: [tableKey, "cells"] });
       await queryClient.invalidateQueries({ queryKey: tableKey });
     },
   });
 };
+
+export const useCreateTableMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [tableKey, "create-table"],
+    mutationFn: ({ name, rows, cols }: { name: string; rows: number; cols: number }) => {
+      return axios
+        .post(`/api/tables`, { name, rows, cols })
+        .then((res) => res.data);
+    },
+    async onSettled() {
+      await queryClient.invalidateQueries({ queryKey: tableKey });
+    },
+  });
+}
 
 export const useUpdateTableMutation = () => {
   const queryClient = useQueryClient();
@@ -104,6 +120,7 @@ export const useAddTableCellsByAmountMutation = () => {
       }
     },
     async onSettled() {
+      await queryClient.invalidateQueries({ queryKey: [tableKey, "cells"] });
       await queryClient.invalidateQueries({ queryKey: tableKey });
     },
   });
@@ -122,7 +139,7 @@ export const useUpdateTableCellsMutation = () => {
         .patch(`/api/cells`, { cells })
         .then((res) => res.data),
     async onSettled() {
-      await queryClient.invalidateQueries({ queryKey: [tableKey] });
+      await queryClient.invalidateQueries({ queryKey: [tableKey, "cells"] });
     },
   })
 };
@@ -149,6 +166,7 @@ export const useDeleteTableCellsMutation = () => {
       }
     },
     async onSettled() {
+      await queryClient.invalidateQueries({ queryKey: [tableKey, "cells"] });
       await queryClient.invalidateQueries({ queryKey: tableKey });
     },
   });

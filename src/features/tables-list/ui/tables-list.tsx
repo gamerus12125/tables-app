@@ -11,10 +11,11 @@ export const TablesList = () => {
     <>
       {isPending && <UiSpinner className="w-10 h-10" />}
       {!isEmpty ? (
-        <ul className="grid p-5">
+        <ul className="grid grid-flow-col p-5">
           {tables.map((table: Table) => (
             <li key={table.id} className="text-xl border-[4px] w-fit h-fit p-5">
               <Link href={`/tables/${table.id}`}>{table.name}</Link>
+              <p>{table.description}</p>
             </li>
           ))}
         </ul>

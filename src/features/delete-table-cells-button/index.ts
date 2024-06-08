@@ -1,1 +1,0 @@
-export {DeleteTableCellsButton} from "./ui/delete-table-cells-button"

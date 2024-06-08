@@ -7,7 +7,7 @@ export const useClearTableCells = () => {
 
   const clearCheckedCells = () => {
     updateTableCellsMutation.mutate({
-      cells: checkedCells.map((cell) => ({ ...cell, value: "" })),
+      cells: checkedCells.map((cell) => ({ ...cell, value: "" , borderColor: null})),
     });
     removeCheckedCells();
   };

@@ -16,7 +16,6 @@ export const useDeleteTableCells = () => {
       tableId: table.id,
       cols,
       rows,
-      name: table.name,
     });
 
     if (type === "row") {

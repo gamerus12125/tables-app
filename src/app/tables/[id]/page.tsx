@@ -1,6 +1,4 @@
-"use client"
-import { ClearTableCellsButton } from "@/features/clear-table-cells-button";
-import { SaveChangesButton } from "@/features/save-changes-table-button";
+import { ChangeCellBorderColorButton, ClearTableCellsButton, EditTableButton, SaveChangesButton } from "@/features/table";
 import { TableWidget } from "@/widgets/table-widget";
 
 const TablePage = ({ params }: { params: { id: number } }) => {
@@ -9,6 +7,8 @@ const TablePage = ({ params }: { params: { id: number } }) => {
       <div className="px-5 flex gap-5">
         <SaveChangesButton />
         <ClearTableCellsButton />
+        <ChangeCellBorderColorButton />
+        <EditTableButton tableId={params.id}/>
       </div>
       <TableWidget id={params.id} />
     </div>

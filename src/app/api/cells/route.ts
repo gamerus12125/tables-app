@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
-import { client } from "../client";
+import client from "@/shared/auth/prisma";
 import { Cell } from "@prisma/client";
+import { auth } from "@/shared/auth/auth";
 
 export const GET = async (req: NextRequest) => {
   const tableId = Number(req.nextUrl.searchParams.get("tableId"));
@@ -10,6 +11,17 @@ export const GET = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => {
   const { tableId, col, row, value, amount } = await req.json();
+  const session = await auth();
+  const ownerId = await client.table.findFirst({
+    where: { id: Number(tableId) },
+    select: { ownerId: true },
+  });
+
+
+  if (ownerId?.ownerId !== session?.user?.id && session?.user?.role !== "admin") {
+    return new Response(null, { status: 403 });
+  }
+
   if (amount) {
     if (col) {
       // Add column
@@ -53,6 +65,26 @@ export const POST = async (req: NextRequest) => {
 
 export const PATCH = async (req: NextRequest) => {
   const { cells, cell }: { cells?: Cell[]; cell?: Cell } = await req.json();
+  const session = await auth();
+  let ownerId = {} as any
+  if (cells) {
+    ownerId = await client.table.findFirst({
+      where: { id: cells[0]?.tableId },
+      select: { ownerId: true },
+    })
+  } else if (cell) {
+    ownerId = await client.table.findFirst({
+      where: { id: cell?.tableId },
+      select: { ownerId: true },
+    })
+  } else {
+    return new Response(null, { status: 400 });
+  }
+
+  if (ownerId?.ownerId !== session?.user?.id && session?.user?.role !== "admin") {
+    return new Response(null, { status: 403 });
+  }
+
   if (cells) {
     cells.forEach(async (cell) => {
       await client.cell.update({
@@ -75,6 +107,18 @@ export const PATCH = async (req: NextRequest) => {
 export const DELETE = async (req: NextRequest) => {
   const { id, row, col }: { id: number; row?: number; col?: number } =
     await req.json();
+
+  const session = await auth();
+
+  const ownerId = await client.table.findFirst({
+    where: { id },
+    select: { ownerId: true },
+  });
+
+  if (ownerId?.ownerId !== session?.user?.id && session?.user?.role !== "admin") {
+    return new Response(null, { status: 403 });
+  }
+
   if (row) {
     const res = await client.cell.deleteMany({
       where: {

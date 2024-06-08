@@ -8,10 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/ui-table";
-import { ChangeableTableCell, useTable, useTableCells } from "@/features/table";
-import { AddTableCellsButton } from "@/features/add-table-cells-button";
-import { DeleteTableCellsButton } from "@/features/delete-table-cells-button";
-
+import { ChangeableTableCell, useTable, useTableCells, AddTableCellsButton, DeleteTableCellsButton } from "@/features/table";
 export const TableWidget = ({ id }: { id: number }) => {
   const { table, isPending } = useTable(id);
   const { cells } = useTableCells(id);
@@ -23,7 +20,10 @@ export const TableWidget = ({ id }: { id: number }) => {
     for (let i = 0; i < cols; i++) {
       const cell = getTableCell(i, 0);
       result.push(
-          <ChangeableTableCell key={JSON.stringify([i, 0])} cell={cell || { tableId: id, col: i, row: 0, value: "", id: -1 }} />
+        <ChangeableTableCell
+          key={JSON.stringify([i, 0])}
+          cell={cell || { tableId: id, col: i, row: 0, value: "", id: -1, borderColor: null }}
+        />
       );
     }
     return result;
@@ -37,7 +37,16 @@ export const TableWidget = ({ id }: { id: number }) => {
       const cell = getTableCell(i, row);
       result.push(
         <ChangeableTableCell
-          cell={cell || { tableId: id, col: i, row, value: "", id: -1 }}
+          cell={
+            cell || {
+              tableId: id,
+              col: i,
+              row,
+              value: "",
+              id: -1,
+              borderColor: null,
+            }
+          }
           key={JSON.stringify([i, row])}
         />
       );
@@ -62,7 +71,7 @@ export const TableWidget = ({ id }: { id: number }) => {
 
   return (
     <Table>
-      <TableCaption>Таблица No{id}</TableCaption>
+      <TableCaption>Таблица {table?.name}</TableCaption>
       {table && !isPending ? (
         <>
           <TableHeader>
@@ -70,8 +79,8 @@ export const TableWidget = ({ id }: { id: number }) => {
               {getTableHeader()}
               <TableHead>
                 <div className="flex items-center gap-5">
-                <AddTableCellsButton table={table} type={"col"}/>
-                <DeleteTableCellsButton table={table} type={"col"}/>
+                  <AddTableCellsButton table={table} type={"col"} />
+                  <DeleteTableCellsButton table={table} type={"col"} />
                 </div>
               </TableHead>
             </TableRow>
@@ -80,9 +89,9 @@ export const TableWidget = ({ id }: { id: number }) => {
             {getTableBody()}
             <TableRow>
               <TableCell>
-              <div className="flex items-center gap-5">
-                <AddTableCellsButton table={table} type={"row"}/>
-                <DeleteTableCellsButton table={table} type={"row"}/>
+                <div className="flex items-center gap-5">
+                  <AddTableCellsButton table={table} type={"row"} />
+                  <DeleteTableCellsButton table={table} type={"row"} />
                 </div>
               </TableCell>
             </TableRow>

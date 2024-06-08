@@ -1,1 +1,1 @@
-export {useTablesQuery, useTableQuery, useTableCellsQuery, useAddTableCellsByAmountMutation, useAddTableCellMutation, useUpdateTableMutation, useUpdateTableCellsMutation, useDeleteTableCellsMutation} from "./queries"
+export {useTablesQuery, useTableQuery, useTableCellsQuery, useAddTableCellsByAmountMutation, useAddTableCellMutation, useUpdateTableMutation, useUpdateTableCellsMutation, useDeleteTableCellsMutation, useCreateTableMutation} from "./queries"

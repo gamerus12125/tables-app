@@ -7,9 +7,13 @@ import {
   navigationMenuTriggerStyle,
 } from "@/shared/ui/ui-navigation-menu";
 import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
+import { MenuIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export const Header = () => {
+  const session = useSession();
+
   return (
     <header className="flex items-center justify-between p-3 max-w-full">
       <NavigationMenu>
@@ -29,6 +33,37 @@ export const Header = () => {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
+
+            {session.status === "authenticated" ? (
+              <NavigationMenuItem>
+                <Link href="/profile" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    {session.data?.user?.name}
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            ) : (
+              <>
+                <NavigationMenuItem>
+                  <Link href="/sign-in" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Войти
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/register" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Зарегистрироваться
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              </>
+            )}
           </div>
         </NavigationMenuList>
       </NavigationMenu>
